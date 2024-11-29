@@ -1,0 +1,131 @@
+﻿@page "/"
+@using System.Text
+@using monobu_test.Components
+@using monobu_test.Models
+@inject HttpClient HttpClient
+@inject ILogger<Index> Logger
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+<div class="wrapper">
+    <h1>確認テスト</h1>
+    @if (_index == _questionList.Count && _index != 0)
+    {
+        <div class="complete">
+            <div>お疲れ様です！テスト終了！</div>
+            <div>回答結果の確認を依頼しよう！</div>
+            <button class="btn btn-primary" @onclick=@DownloadResultFile disabled=@_isDownload>@(_isDownload ? "ダウンロード中..."
+            : "結果をダウンロードする")</button>
+        </div>
+    }
+    else
+    {
+        <div class="question-area">
+            @if (_currentQuestion == null)
+            {
+                <div>読み込み中...</div>
+            }
+            else
+            {
+                <h2>Q@(_index + 1)</h2>
+                <Question Model="_currentQuestion" OnClick="QuestionCompleted" />
+            }
+        </div>
+    }
+</div>
+@code {
+    private List<QuestionModel> _questionList = new List<QuestionModel>();
+    private QuestionModel? _currentQuestion;
+    private int _index = 0;
+    private bool _isDownload = false;
+    private void QuestionCompleted()
+    {
+        if (_currentQuestion == null)
+        {
+            return;
+        }
+        _currentQuestion.IsConfirm = true;
+        _index++;
+        if (_index < _questionList.Count)
+        {
+            _currentQuestion = _questionList[_index];
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        //get questions
+        var response = await HttpClient.GetAsync("data/questions.csv");
+        if (response.IsSuccessStatusCode)
+        {
+            using var stream = await response.Content.ReadAsStreamAsync();
+            using var streamReader = new StreamReader(stream);
+            while (!streamReader.EndOfStream)
+            {
+                string? question = await streamReader.ReadLineAsync();
+                if (string.IsNullOrEmpty(question))
+                {
+                    continue;
+                }
+                string[] questionAndCondition = question.Split(',');
+                string[] conditions = questionAndCondition[1].Split('#');
+                List<QuestionCondition> items = new List<QuestionCondition>();
+                foreach (var condition in conditions)
+                {
+                    string[] keyValue = condition.Split(':');
+                    Logger.LogInformation(condition);
+                    Logger.LogInformation(keyValue.Length.ToString());
+                    if (keyValue.Length != 2)
+                    {
+                        continue;
+                    }
+                    items.Add(new QuestionCondition(keyValue[0], keyValue[1]));
+                }
+                QuestionModel questionModel = new QuestionModel(questionAndCondition[0], items.AsReadOnly());
+                _questionList.Add(questionModel);
+            }
+        }
+        else
+        {
+            //handle error
+        }
+        if (_questionList.Count == 0)
+        {
+            //handle error
+        }
+        else
+        {
+            _currentQuestion = _questionList[_index];
+            StateHasChanged();
+        }
+    }
+
+    private async Task DownloadResultFile()
+    {
+        _isDownload = true;
+        int number = 1;
+        StringBuilder stringBuilder = new StringBuilder();
+        foreach (var result in _questionList.Where(a => a.IsConfirm))
+        {
+            string questionNumber = $"Q{number}";
+            string question = result.Question;
+            string condition = string.Join(Environment.NewLine, result.Conditions.Select(a => $"{a.Property}:{a.Value}"));
+            string answer = result.Answer;
+            string separator = string.Join("", Enumerable.Range(0, 30).Select(a => "-"));
+
+            string content = string.Join(Environment.NewLine, questionNumber, question, condition, string.Empty, "回答:",
+            answer, string.Empty, separator);
+            stringBuilder.Append(content);
+            stringBuilder.Append(Environment.NewLine);
+            number++;
+        }
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(stringBuilder.ToString()));
+        string fileName = $"result_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
+        using var streamRef = new DotNetStreamReference(stream);
+        await JSRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        Reset();
+    }
+
+    private void Reset()
+    {
+        NavigationManager.NavigateTo("", true);
+    }
+}

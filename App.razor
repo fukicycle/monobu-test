@@ -1,0 +1,11 @@
+﻿<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <PageTitle>404</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">このリソースは存在しません。</p>
+        </LayoutView>
+    </NotFound>
+</Router>

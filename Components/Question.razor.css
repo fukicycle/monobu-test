@@ -1,0 +1,16 @@
+table {
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: solid 1px var(--primary-color-400);
+    padding: var(--space-4);
+}
+
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}

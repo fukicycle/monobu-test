@@ -1,0 +1,42 @@
+﻿@inherits LayoutComponentBase
+<header class="header">
+    <div class="container header-content">
+        <div>CTS - Confirmation Test System</div>
+        <div>
+            <input type="text" @bind=@SelectedUser class="input" disabled=@(!string.IsNullOrEmpty(SelectedUser) &&
+                !string.IsNullOrWhiteSpace(SelectedUser)) />
+        </div>
+    </div>
+</header>
+<main class="container">
+    @Body
+    @if (string.IsNullOrEmpty(SelectedUser) || string.IsNullOrWhiteSpace(SelectedUser))
+    {
+        <div class="first">
+            <div>
+                <div class="attention">
+                    <h1>注意事項</h1>
+                    <h3>このテストは一度回答すると前の問題に戻ることはできません。</h3>
+                    <h3>また、ブラウザを閉じたり、再読み込みすると回答が消えます。</h3>
+                    <h3>回答が終わったら確認してもらってください。</h3>
+                </div>
+                <div class="note">
+                    <h1>TODO</h1>
+                    <div>まず初めに右上の入力欄から氏名を入力してください。</div>
+                    <div>入力したらEnterキーを押してテストに進みます。</div>
+                    <div>※名前の修正したい場合は再読み込みしてください。</div>
+                </div>
+            </div>
+        </div>
+    }
+</main>
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div>Created by Fuki Sato</div>
+        </div>
+    </div>
+</footer>
+@code {
+    public string? SelectedUser { get; set; }
+}

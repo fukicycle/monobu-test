@@ -1,0 +1,48 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using monobu_test.Models
+@inject IJSRuntime JSRuntime
+<EditForm Model="Model" OnValidSubmit="OnClick">
+    <div class="form">
+        <DataAnnotationsValidator />
+        <input type="hidden" value="@Model.Id" />
+        <h3> @Model.Question </h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>プロパティ</th>
+                    <th>値</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var condition in Model.Conditions)
+                {
+                    <tr>
+                        <td>@condition.Property</td>
+                        <td>@condition.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div>以下に回答を入力してください。</div>
+        <textarea @ref=@_ref @bind-value=@Model.Answer rows="4" class="input" id="editor"
+            @bind-value:event="oninput"></textarea>
+        <ValidationMessage For="@(() => Model.Answer)" />
+        <button id="submitButton" class="btn btn-primary" type="submit">回答する</button>
+    </div>
+</EditForm>
+@code {
+    [Parameter]
+    public QuestionModel Model { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    public InputTextArea _refTextArea = null!;
+    public ElementReference _ref = default!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeVoidAsync("loadedTextArea");
+        await _ref.FocusAsync();
+    }
+}

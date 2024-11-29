@@ -1,0 +1,171 @@
+/* font */
+
+.noto-serif-jp-200 {
+    font-family: "Noto Serif JP", serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+}
+
+.noto-serif-jp-300 {
+    font-family: "Noto Serif JP", serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.noto-serif-jp-400 {
+    font-family: "Noto Serif JP", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.noto-serif-jp-500 {
+    font-family: "Noto Serif JP", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.noto-serif-jp-600 {
+    font-family: "Noto Serif JP", serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.noto-serif-jp-700 {
+    font-family: "Noto Serif JP", serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.noto-serif-jp-800 {
+    font-family: "Noto Serif JP", serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    font-style: normal;
+}
+
+.noto-serif-jp-900 {
+    font-family: "Noto Serif JP", serif;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-style: normal;
+}
+
+/* root style */
+
+:root {
+    --primary-color-200: #C9E6F0;
+    --primary-color-400: #78B3CE;
+    --white: #FBF8EF;
+    --accent-color: #F96E2A;
+    --black: #343434;
+
+    --space-2: 2px;
+    --space-4: 4px;
+    --space-8: 8px;
+    --space-16: 16px;
+    --space-32: 32px;
+}
+
+html,
+body,
+#app {
+    height: 100%;
+    background-color: var(--white);
+    color: var(--black);
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+}
+
+/* reset style */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* button style */
+.btn {
+    outline: none;
+    border: solid 1px var(--accent-color);
+    font-size: 16px;
+    font-family: "Noto Serif JP", serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    text-align: center;
+    width: 100%;
+    border-radius: 4px;
+    padding: var(--space-4);
+    cursor: pointer;
+}
+
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: var(--white);
+}
+
+.btn-primary:active {
+    opacity: 0.8;
+    transition: all;
+    transition-duration: 300ms;
+}
+
+.btn-outline {
+    background-color: var(--white);
+    color: var(--black);
+}
+
+/* select style */
+.select {
+    outline: none;
+    border: solid 1px var(--accent-color);
+    border-radius: 4px;
+    background-color: var(--white);
+    color: var(--black);
+    width: 100%;
+    padding: var(--space-4);
+    font-size: 16px;
+    font-family: "Noto Serif JP", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* input style */
+.input {
+    outline: none;
+    border: solid 1px var(--accent-color);
+    border-radius: 4px;
+    background-color: var(--white);
+    color: var(--black);
+    font-size: 16px;
+    width: 100%;
+    padding: var(--space-4);
+    font-family: "Noto Serif JP", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.input:disabled {
+    background-color: transparent;
+    border: none;
+    text-align: right;
+}
+
+.container {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: var(--space-16);
+}

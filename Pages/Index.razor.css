@@ -1,0 +1,10 @@
+.wrapper {
+    height: 100%;
+    padding: 0 var(--space-32);
+}
+
+.question-area {
+    padding: var(--space-16);
+    background-color: var(--primary-color-200);
+    border-radius: var(--space-16);
+}
