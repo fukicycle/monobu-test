@@ -2,10 +2,12 @@
 @using System.Text
 @using monobu_test.Components
 @using monobu_test.Models
+@using monobu_test.Stores
 @inject HttpClient HttpClient
 @inject ILogger<Index> Logger
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
+@inject StateContainer StateContainer
 <div class="wrapper">
     <h1>確認テスト</h1>
     @if (_index == _questionList.Count && _index != 0)
@@ -103,6 +105,7 @@
         _isDownload = true;
         int number = 1;
         StringBuilder stringBuilder = new StringBuilder();
+        string username = StateContainer.User;
         foreach (var result in _questionList.Where(a => a.IsConfirm))
         {
             string questionNumber = $"Q{number}";
@@ -118,7 +121,7 @@
             number++;
         }
         using var stream = new MemoryStream(Encoding.UTF8.GetBytes(stringBuilder.ToString()));
-        string fileName = $"result_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
+        string fileName = $"result_{username}_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
         using var streamRef = new DotNetStreamReference(stream);
         await JSRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
         Reset();

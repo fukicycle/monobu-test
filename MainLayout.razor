@@ -1,16 +1,20 @@
-﻿@inherits LayoutComponentBase
+﻿@using monobu_test.Stores
+@inherits LayoutComponentBase
+@inject StateContainer StateContainer
+@implements IDisposable
 <header class="header">
     <div class="container header-content">
         <div>CTS - Confirmation Test System</div>
         <div>
-            <input type="text" @bind=@SelectedUser class="input" disabled=@(!string.IsNullOrEmpty(SelectedUser) &&
-                !string.IsNullOrWhiteSpace(SelectedUser)) />
+            <input type="text" @bind=@StateContainer.User class="input"
+                disabled=@(!string.IsNullOrEmpty(StateContainer.User) &&
+                !string.IsNullOrWhiteSpace(StateContainer.User)) />
         </div>
     </div>
 </header>
 <main class="container">
     @Body
-    @if (string.IsNullOrEmpty(SelectedUser) || string.IsNullOrWhiteSpace(SelectedUser))
+    @if (string.IsNullOrEmpty(StateContainer.User) || string.IsNullOrWhiteSpace(StateContainer.User))
     {
         <div class="first">
             <div>
@@ -38,5 +42,13 @@
     </div>
 </footer>
 @code {
-    public string? SelectedUser { get; set; }
+
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
+    }
 }
